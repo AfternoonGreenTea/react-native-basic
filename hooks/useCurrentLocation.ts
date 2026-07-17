@@ -39,4 +39,6 @@ export function useCurrentLocation() {
             setLoading(false);
         }
     }
+
+    return { location, error, loading, requestLocation };
 }
