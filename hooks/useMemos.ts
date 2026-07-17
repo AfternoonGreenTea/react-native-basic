@@ -1,27 +1,52 @@
-import { useState, useCallback } from 'react';
-import type { Memo } from '../components/MemoCard';
-
-const SAMPLE_MEMOS: Memo[] = [
-  { id: '1', title: 'Shopping List', content: 'Milk, eggs, bread, vegetables', updatedAt: '2025-07-15' },
-  { id: '2', title: 'Meeting Notes', content: 'Project progress review, next sprint planning', updatedAt: '2025-07-14' },
-  { id: '3', title: 'Ideas', content: 'Consider new features for the app', updatedAt: '2025-07-13' },
-];
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from '../services/api';
+import { useMemoStore } from '../store/useMemoStore';
 
 export function useMemos() {
-  const [memos, setMemos] = useState<Memo[]>(SAMPLE_MEMOS);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { memos, addMemo, updateMemo, removeMemo, isOnline } = useMemoStore();
 
-  const refetch = useCallback(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setMemos(SAMPLE_MEMOS);
-      setIsLoading(false);
-    }, 500);
-  }, []);
+  const { isLoading, refetch } = useQuery({
+    queryKey: ['memos'],
+    queryFn: async () => {
+      const data = await api.getMemos();
+      useMemoStore.setMemos(data);
+      return data;
+    },
+    enabled: isOnline,
+    initialData: memos,
+  });
 
-  const deleteMemo = useCallback((id: string) => {
-    setMemos((prev) => prev.filter((m) => m.id !== id));
-  }, []);
+  const createMutation = useMutation({
+    mutationFn: async (params: { title: string; content: string }) => {
+      const memo = {
+        id: `memo_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+        ...params,
+        category: 'general',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        synced: isOnline,
+      };
+      addMemo(memo);
+      if (isOnline) await api.createMemo(memo);
+      return memo;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['memos'] }),
+  });
 
-  return { memos, isLoading, refetch, deleteMemo };
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      removeMemo(id);
+      if (isOnline) await api.deleteMemo(id);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['memos'] }),
+  });
+
+  return {
+    memos,
+    isLoading,
+    refetch,
+    createMemo: createMutation.mutate,
+    deleteMemo: deleteMutation.mutate,
+  }
 }
