@@ -35,7 +35,7 @@ export async function startBackgroundLocationTracking() {
         showsBackgroundLocationIndicator: true,
         foregroundService: {
             notificationTitle: 'MemoSync',
-            notificationBody: '位置情報を追跡中',
+            notificationBody: 'Tracking location',
             notificationColor: '#1a73e8',
         },
     })

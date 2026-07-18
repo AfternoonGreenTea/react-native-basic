@@ -21,7 +21,7 @@ export function LocationAttachment({ onLocationAttached }: Props) {
         <TouchableOpacity onPress={handleAttach} disabled={loading} style={styles.button}>
             <Ionicons name="location-outline" size={20} color="#1a73e8" />
             <Text style={styles.buttonText}>
-            {loading ? '取得中...' : '位置情報を添付'}
+            {loading ? 'Getting location...' : 'Attach location'}
             </Text>
         </TouchableOpacity>
         {location && (

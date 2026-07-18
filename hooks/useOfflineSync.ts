@@ -29,14 +29,14 @@ export function useOfflineSync() {
             successIds.push(action.id);
           } catch (error: any) {
             if (error.status === 409) {
-              // Last-write-wins: サーバー版を取得してローカルを上書き
+              // Last-write-wins: fetch server version and overwrite local
               const serverMemo = await api.getMemo(action.data.id!);
               useMemoStore.getState().updateMemo(action.data.id!, serverMemo);
               successIds.push(action.id);
             } else if (error.status >= 400 && error.status < 500) {
               successIds.push(action.id);
             }
-            // 5xx エラーは次回リトライのため残す
+            // Keep 5xx errors for retry on the next sync
           }
         }
     

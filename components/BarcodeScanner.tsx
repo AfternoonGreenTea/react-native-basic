@@ -11,9 +11,9 @@ export function BarcodeScanner({ onScanned }: { onScanned: (data: string) => voi
     if (!permission.granted) {
         return (
             <View style={styles.container}>
-                <Text style={styles.message}>カメラの許可が必要です</Text>
+                <Text style={styles.message}>Camera permission is required</Text>
                 <TouchableOpacity onPress={requestPermission} style={styles.button}>
-                    <Text style={styles.buttonText}>許可する</Text>
+                    <Text style={styles.buttonText}>Allow</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -39,7 +39,7 @@ export function BarcodeScanner({ onScanned }: { onScanned: (data: string) => voi
                 onPress={() => setScanned(false)}
                 style={styles.rescanButton}
                 >
-                <Text style={styles.buttonText}>もう一度スキャン</Text>
+                <Text style={styles.buttonText}>Scan again</Text>
                 </TouchableOpacity>
             )}
         </View>

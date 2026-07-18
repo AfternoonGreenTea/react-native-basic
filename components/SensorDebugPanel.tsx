@@ -8,24 +8,24 @@ export function SensorDebugPanel() {
 
     return (
         <View style={styles.panel}>
-            <Text style={styles.title}>センサーデータ</Text>
+            <Text style={styles.title}>Sensor Data</Text>
 
-            <Text style={styles.label}>加速度計:</Text>
+            <Text style={styles.label}>Accelerometer:</Text>
             {accelAvailable ? (
                 <Text style={styles.value}>
                 x: {accel.x.toFixed(3)} | y: {accel.y.toFixed(3)} | z: {accel.z.toFixed(3)}
                 </Text>
             ) : (
-                <Text style={styles.unavailable}>利用不可</Text>
+                <Text style={styles.unavailable}>Unavailable</Text>
             )}
 
-            <Text style={styles.label}>ジャイロスコープ:</Text>
+            <Text style={styles.label}>Gyroscope:</Text>
             {gyroAvailable ? (
                 <Text style={styles.value}>
                 x: {gyro.x.toFixed(3)} | y: {gyro.y.toFixed(3)} | z: {gyro.z.toFixed(3)}
                 </Text>
             ) : (
-                <Text style={styles.unavailable}>利用不可</Text>
+                <Text style={styles.unavailable}>Unavailable</Text>
             )}
         </View>
     )

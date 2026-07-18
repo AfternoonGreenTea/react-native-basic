@@ -34,10 +34,10 @@ export function SyncIndicator() {
       </Animated.View>
       <Text style={styles.text}>
         {!isOnline
-          ? 'オフライン'
+          ? 'Offline'
           : isSyncing
-          ? '同期中...'
-          : `未同期: ${pendingActions.length}件`}
+          ? 'Syncing...'
+          : `Pending: ${pendingActions.length}`}
       </Text>
     </View>
   );
